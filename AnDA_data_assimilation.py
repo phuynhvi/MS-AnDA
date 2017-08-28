@@ -45,11 +45,9 @@ def AnDA_data_assimilation(yo, DA):
             i_var_obs = np.where(~np.isnan(yo.values[k,:]))[0];            
             if (len(i_var_obs)>0):                
                 if (np.isscalar(DA.R)): # in case of high dimension
-                    cov_R = DA.R*np.eye(len(i_var_obs))
-                    cov_R_inv = np.eye(len(i_var_obs))/DA.R
                     eps = [np.random.normal(0,np.sqrt(DA.R),len(i_var_obs)) for i in range(DA.N)]
                     eps = np.array(eps)
-                    K_part = inv_using_Woodbury(cov_R_inv,DA.H[i_var_obs,:],inv_using_SVD(Pf[k,:,:],0.9999),DA.H[i_var_obs,:].T,1/DA.R)
+                    K_part = inv_using_Woodbury(1/DA.R,DA.H[i_var_obs,:],inv_using_SVD(Pf[k,:,:],0.9999),DA.H[i_var_obs,:].T,1/DA.R)
                 else: # normal case
                     cov_R = DA.R[np.ix_(i_var_obs,i_var_obs)]
                     eps = np.random.multivariate_normal(np.zeros(len(i_var_obs)),cov_R,DA.N)
