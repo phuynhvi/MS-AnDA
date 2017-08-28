@@ -1,16 +1,9 @@
-#!/usr/bin/env python
-
-""" AnDA_variables.py: Collection of variables used in MS-AnDA (applications to SST (sea surface temperature) and SLA(sea level anomaly)). """
-
-__author__ = "Phi Huynh Viet"
-__version__ = "1.0"
-__date__ = "2017-08-01"
-__email__ = "phi.huynhviet@telecom-bretagne.eu"
-
 import numpy as np
 
-###### Parameters setting ###########################
+###### Parameters setting for SST ###########################
 class PR:
+    flag_scale = []  # True: multi scale
+                        # False: one scale
     n = [] # dimension state
     patch_r = [] # size of patch
     patch_c = [] # size of patch
@@ -19,14 +12,14 @@ class PR:
     lag = [] # lag of time series: t -> t+lag
     G_PCA = [] # N_eof for global PCA
     # Input dataset
-    path_X = []
-    path_OI = []
-    path_mask = []
+    path_X = [] # dir of dataset X ( SST or SLA )
+    path_OI = [] # dir of OI product of test years 
+    path_mask = [] # dir of observation mask
     # Dataset automatically created during execution
-    path_X_lr = []
-    path_dX_PCA = []
-    path_index_patches = []
-    path_neighbor_patches = []
+    path_X_lr = [] # dir to store LR product of X, created by PCA
+    path_dX_PCA = [] # dir to store PCA transformation of dX
+    path_index_patches = [] # dir to store all position of each patch over image
+    path_neighbor_patches = [] # dir to store position of each path's neighbors
 
 class General_AF:
     def __init__(self):
@@ -36,8 +29,6 @@ class General_AF:
         self.flag_model = [] # True: Use gradient, velocity as additional regressors in AF
         self.flag_catalog = [] # True: each catalog for each patch position
                             # False: only one catalog for all positions
-        self.flag_scale = []  # True: multi scale
-                            # False: one scale
         self.lag = [] # equal to PR.lag
         self.cluster = []       # clusterized version AF
         self.k = [] # number of analogs
@@ -51,22 +42,22 @@ class General_AF:
         self.regression = []
         self.sampling = []
         self.list_kdtree = [] # store kdtree, nearest neighbor searcher
-        self.B = []
-        self.R = []
+        self.B = [] # variance of initial state error 
+        self.R = [] # variance of observation error
     
-        self.check_indices = []
-        self.x_cond = []
-        self.x_model = []
-        self.obs_mask = []
-        self.cata_model_full = []
-        self.coeff_dX = []
-        self.mu_dX = []
+        self.check_indices = [] 
+        self.x_cond = [] # conditional state to retrieve analogs
+        self.coeff_dX = [] # EOF space of state
+        self.mu_dX = [] # EOF mean vector
+        self.x_model = [] # physical model : velocity & gradient
+        self.obs_mask = [] # mask of observation
+        self.cata_model_full = [] # training set of physical model
+
     def copy(self,AF):
         self.flag_reduced = AF.flag_reduced
         self.flag_cond = AF.flag_cond
         self.flag_model = AF.flag_model
         self.flag_catalog = AF.flag_catalog
-        self.flag_scale = AF.flag_scale
         self.lag = AF.lag
         self.cluster = AF.cluster     
         self.k = AF.k
@@ -101,7 +92,8 @@ class VAR:
     Obs_test = [] # Observation in test year, by applying mask to dX GT    
     dX_cond = [] # condition used for AF
     gr_vl_train = [] # gradient, velocity used as physical condition
-    gr_vl_test = []            
+    gr_vl_test = {}  
+    gr_vl_coeff = {}        
     index_patch = [] # store order of every image patch: 0, 1,..total_patchs
     neighbor_patchs = [] # store order of neighbors of every image patch
    
@@ -119,4 +111,6 @@ class AnDA_result:
     corr_OI = []
     rmse_postAnDA = []
     corr_postAnDA = []
+
+
 ###### Datasets Definition ###########################   
