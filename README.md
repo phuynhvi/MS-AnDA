@@ -183,6 +183,10 @@ with open(saved_path, 'rb') as handle:
     MS_AnDA_itrp = pickle.load(handle) 
 ```
 To compare with AnDA interpolation:
+   * Run [VE-DINEOF](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0155928) algorithms to compare with AnDA interpolation.
+     ```bash
+     itrp_dineof = VE_Dineof(PR_, VAR_.dX_orig+VAR_.X_lr, VAR_.Optimal_itrp+VAR_.X_lr[PR_.training_days:], VAR_.Obs_test, 100, 50)
+     ```
    * Run G-AnDA: applying AnDA on region scale. We need to reset parameters in **PR** and **General_AF**:
      ```bash
        PR_.flag_scale = False  # True: multi scale AnDA, False: global scale AnDA                 
@@ -210,32 +214,16 @@ To compare with AnDA interpolation:
      MS_AnDA_ = MS_AnDA(VAR_, PR_, AF_)
      itrp_G_AnDA = MS_AnDA_.single_patch_assimilation([np.arange(r_start,r_start+r_length),np.arange(c_start,c_start+c_length)])
      ``` 
-   * Run [VE-DINEOF](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0155928) algorithms to compare with AnDA interpolation.
-     ```bash
-     itrp_dineof = VE_Dineof(PR_, VAR_.dX_orig+VAR_.X_lr, VAR_.Optimal_itrp+VAR_.X_lr[PR_.training_days:], VAR_.Obs_test, 100, 50)
-     ```
 Compare Fourier power spectrum (**note** that the input of *raPsd2dv1* should be without land pixel (avoid NaN values). 
 ```bash
 day =11 # 82
-resSLA = 0.25
-f0, Pf_G_AnDA  = raPsd2dv1(itrp_G_AnDA[day,:,:]*100,resSLA,True)
-f1, Pf_postAnDA  = raPsd2dv1(AnDA_sla_1.itrp_postAnDA[day,:,:]*100,resSLA,True)
-f2, Pf_GT    = raPsd2dv1(AnDA_sla_1.GT[day,38:173,62:]*100,resSLA,True)
-f3, Pf_OI    = raPsd2dv1(AnDA_sla_1.itrp_OI[day,38:173,62:]*100,resSLA,True)
-f4, Pf_Dineof    = raPsd2dv1(sla_dineof[day,38:173,62:]*100,resSLA,True)
-
+res_ = 0.25
+f0, Pf_  = raPsd2dv1(itrp_G_AnDA[day,:,:],resSLA,True)
 wf1         = 1/f1
-wf2         = 1/f2
-wf3         = 1/f3
 plt.figure()
-plt.loglog(wf2,Pf_GT,label='GT')
-plt.loglog(wf3,Pf_OI,label='OI')
-plt.loglog(wf3,Pf_Dineof,label='VE_DINEOF')
 plt.loglog(wf1,Pf_AnDA,label='G-AnDA')
-plt.loglog(wf2,Pf_postAnDA,label='MS-AnDA')
 plt.gca().invert_xaxis()
 plt.legend()
-plt.ylim((10E-8,10))
 plt.xlabel('Wavelength (km)')
 plt.ylabel('Fourier power spectrum')
 ```
