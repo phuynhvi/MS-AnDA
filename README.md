@@ -4,7 +4,7 @@ MS-AnDA is a Python library for Multi-scale Analog Data Assimilation, applicatio
  
 This Python library is an additional material of the publication "Data-driven Models for the Spatio-Temporal Interpolation of satellite-derived SST Fields", from **R. Fablet, P. Huynh Viet, R. Lguensat**, accepted to *IEEE Transactions on Computational Imaging*
 
-# How to use
+# Basic Overview
 The toolbox includes 3 main modules:
 1. Module **Parameters** (*AnDA_variables.py*): 
    * Class **PR**: to specify general parameters
@@ -119,3 +119,5 @@ The toolbox includes 3 main modules:
     * Class **Multi_patch_assimilation**:
        * Processing on a zone of image (defined by its size and coordinates of top-left point), by dividing into multiples patches, then plugging them into **Single_patch_assimilation**
        * Input: number of parallel jobs, or number of patches are executed simultaneously.
+       
+# Test
