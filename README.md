@@ -67,26 +67,26 @@ The toolbox includes 3 main modules:
       * Pre-trained nearest neighbor searchers ( FLANN )
       ```bash
       # Example of Analog Forecasting for SST
-      AF_sst = General_AF()
-      AF_sst.flag_reduced  = True # True: Clusterized version of Local Linear AF
-      AF_sst.flag_cond = False # True: use Obs at t+lag as condition to select successors
+      AF_ = General_AF()
+      AF_.flag_reduced  = True # True: Clusterized version of Local Linear AF
+      AF_.flag_cond = False # True: use Obs at t+lag as condition to select successors
                         # False: no condition in analog forecasting
-      AF_sst.flag_model = False # True: Use gradient, velocity as additional regressors in AF
-      AF_sst.flag_catalog = True # True: Use each catalog for each patch position
+      AF_.flag_model = False # True: Use gradient, velocity as additional regressors in AF
+      AF_.flag_catalog = True # True: Use each catalog for each patch position
                           # False: Use only one big catalog for all positions 
-      AF_sst.cluster = 1     # number of cluster for clusterized ver.
-      AF_sst.k = 200  # number of analogs
-      AF_sst.k_initial = 200 # retrieving k_initial nearest neighbors, then using condition to retrieve k analogs, k_initial must >= k
-      AF_sst.neighborhood = np.ones([PR_sst.n,PR_sst.n]) # global analogs
-      AF_sst.neighborhood = np.eye(PR_sst.n)+np.diag(np.ones(PR_sst.n-1),1)+ np.diag(np.ones(PR_sst.n-1),-1)+ \
-                             np.diag(np.ones(PR_sst.n-2),2)+np.diag(np.ones(PR_sst.n-2),-2)
-      AF_sst.neighborhood[0:2,:5] = 1
-      AF_sst.neighborhood[PR_sst.n-2:,PR_sst.n-5:] = 1 # local analogs
-      AF_sst.neighborhood[PR_sst.n-2:,PR_sst.n-5:] = 1 # local analogs
-      AF_sst.regression = 'local_linear' # forecasting strategies. select among: locally_constant, increment, local_linear 
-      AF_sst.sampling = 'gaussian' 
-      AF_sst.B = 0.05 # variance of initial state error
-      AF_sst.R = 0.1  # variance of observation error
+      AF_.cluster = 1     # number of cluster for clusterized ver.
+      AF_.k = 200  # number of analogs
+      AF_.k_initial = 200 # retrieving k_initial nearest neighbors, then using condition to retrieve k analogs, k_initial must >= k
+      AF_.neighborhood = np.ones([PR_.n,PR_.n]) # global analogs
+      AF_.neighborhood = np.eye(PR_.n)+np.diag(np.ones(PR_.n-1),1)+ np.diag(np.ones(PR_.n-1),-1)+ \
+                             np.diag(np.ones(PR_.n-2),2)+np.diag(np.ones(PR_.n-2),-2)
+      AF_.neighborhood[0:2,:5] = 1
+      AF_.neighborhood[PR_.n-2:,PR_.n-5:] = 1 # local analogs
+      AF_.neighborhood[PR_.n-2:,PR_.n-5:] = 1 # local analogs
+      AF_.regression = 'local_linear' # forecasting strategies. select among: locally_constant, increment, local_linear 
+      AF_.sampling = 'gaussian' 
+      AF_.B = 0.05 # variance of initial state error
+      AF_.R = 0.1  # variance of observation error
       ```
    * Class **AnDA_result**: store AnDA’s results, such as GT, Observation, Optimal Interpolation, AnDA Interpolations and statistical errors (rmse, correlation)
       ```bash
@@ -182,10 +182,26 @@ Save result:
 with open(saved_path, 'rb') as handle:
     AnDA_sst_1 = pickle.load(handle) 
 ```
-Run [VE-DINEOF](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0155928) algorithms to compare with AnDA interpolation.
-```bash
-sla_dineof = VE_Dineof(PR_sla, VAR_sla.dX_orig+VAR_sla.X_lr, VAR_sla.Optimal_itrp+VAR_sla.X_lr[PR_sla.training_days:], VAR_sla.Obs_test, 100, 50)
-```
+To compare with AnDA interpolation:
+   * Run G-AnDA: applying AnDA on region scale. We need to reset parameters in **PR** and **General_AF**:
+     ```bash
+       PR_.flag_scale = False  # True: multi scale AnDA, False: global scale AnDA                 
+       PR_.n = 200 # choose higher than the one from local scale, because we want to keep 99% variance after applying global PCA.
+       PR_.patch_r = 200 # r_size of image 
+       PR_.patch_c = 120 # c_size of image
+       AF_.flag_reduced  = False or True
+       AF_.flag_cond = False 
+       AF_.flag_model = False 
+       AF_.flag_catalog = False
+       AF_.cluster = 1     # number of cluster for clusterized ver.
+       AF_.k = 500  # number of analogs, should be higher than state vector's dimension
+       AF_.k_initial = 500 # retrieving k_initial nearest neighbors, then using condition to retrieve k analogs, k_initial must >= k
+       AF_.neighborhood = np.ones([PR_.n,PR_.n]) # global analogs
+     ```
+   * Run [VE-DINEOF](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0155928) algorithms to compare with AnDA interpolation.
+     ```bash
+     sla_dineof = VE_Dineof(PR_sla, VAR_sla.dX_orig+VAR_sla.X_lr, VAR_sla.Optimal_itrp+VAR_sla.X_lr[PR_sla.training_days:], VAR_sla.Obs_test, 100, 50)
+     ```
 Compare Fourier power spectrum
 ```bash
 day =11# 82
