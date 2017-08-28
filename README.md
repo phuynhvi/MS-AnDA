@@ -125,7 +125,7 @@ Specify all necessary parameters described in class **PR**, and **General_AF**
 Load data into class **VAR**:
 ```bash
 VAR_ = VAR()
-VAR_ = Load_data(PR_sst) 
+VAR_ = Load_data(PR_) 
 ```
 Visualize an example of reference Groundtruth, Observation and Optimal Interpolation product
 ```bash
@@ -166,7 +166,7 @@ level = 22 # 22 patches executed simultaneously
 ```
 Run Assimilation:
 ```bash
-saved_path =  './data/AMSRE/AnDA/AnDA_local_cond.pickle'
+saved_path =  'path_to_save.pickle'
 AnDA_sst_1 = AnDA_result()
 MS_AnDA_sst = MS_AnDA(VAR_sst, PR_sst, AF_sst)
 AnDA_sst_1 = MS_AnDA_sst.multi_patches_assimilation(level, r_start, r_length, c_start, c_length)
@@ -198,16 +198,28 @@ To compare with AnDA interpolation:
        AF_.k_initial = 500 # retrieving k_initial nearest neighbors, then using condition to retrieve k analogs, k_initial must >= k
        AF_.neighborhood = np.ones([PR_.n,PR_.n]) # global analogs
      ```
+     Then reload data (because we now assimilate high resolution (original) fields, not detail fields):
+     ```bash
+     VAR_ = VAR()
+     VAR_ = Load_data(PR_) 
+     ```
+     Then run single patch assimilation (this case isn't patch-based):
+     ```bash
+     saved_path =  'path_to_save.pickle'
+     itrp_G_AnDA = AnDA_result()
+     MS_AnDA_ = MS_AnDA(VAR_, PR_, AF_)
+     itrp_G_AnDA = MS_AnDA_.single_patch_assimilation([np.arange(r_start,r_start+r_length),np.arange(c_start,c_start+c_length)])
+     ``` 
    * Run [VE-DINEOF](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0155928) algorithms to compare with AnDA interpolation.
      ```bash
-     sla_dineof = VE_Dineof(PR_sla, VAR_sla.dX_orig+VAR_sla.X_lr, VAR_sla.Optimal_itrp+VAR_sla.X_lr[PR_sla.training_days:], VAR_sla.Obs_test, 100, 50)
+     itrp_dineof = VE_Dineof(PR_sla, VAR_sla.dX_orig+VAR_sla.X_lr, VAR_sla.Optimal_itrp+VAR_sla.X_lr[PR_sla.training_days:], VAR_sla.Obs_test, 100, 50)
      ```
-Compare Fourier power spectrum
+Compare Fourier power spectrum (**note** that the input of *raPsd2dv1* should be without land pixel (avoid NaN values). 
 ```bash
-day =11# 82
+day =11 # 82
 resSLA = 0.25
-f0, Pf_AnDA  = raPsd2dv1(G_AnDA.itrp_AnDA[day,38:173,62:]*100,resSLA,True)
-f1, Pf_postAnDA  = raPsd2dv1(AnDA_sla_1.itrp_postAnDA[day,38:173,62:]*100,resSLA,True)
+f0, Pf_G_AnDA  = raPsd2dv1(itrp_G_AnDA[day,:,:]*100,resSLA,True)
+f1, Pf_postAnDA  = raPsd2dv1(AnDA_sla_1.itrp_postAnDA[day,:,:]*100,resSLA,True)
 f2, Pf_GT    = raPsd2dv1(AnDA_sla_1.GT[day,38:173,62:]*100,resSLA,True)
 f3, Pf_OI    = raPsd2dv1(AnDA_sla_1.itrp_OI[day,38:173,62:]*100,resSLA,True)
 f4, Pf_Dineof    = raPsd2dv1(sla_dineof[day,38:173,62:]*100,resSLA,True)
@@ -227,3 +239,4 @@ plt.ylim((10E-8,10))
 plt.xlabel('Wavelength (km)')
 plt.ylabel('Fourier power spectrum')
 ```
+![](../master/Image/psd.PNG)
