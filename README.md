@@ -128,6 +128,29 @@ VAR_ = VAR()
 VAR_ = Load_data(PR_sst) 
 ```
 Visualize an example of reference Groundtruth, Observation and Optimal Interpolation product
+```bash
+day = 50
+colormap='nipy_spectral'
+plt.clf()
+gt = VAR_.dX_GT_test[day,:,:]   
+obs = VAR_.Obs_test[day,:,:]    
+itrp = VAR_.Optimal_itrp[day,:,:]   
+vmin = np.nanmin(gt)
+vmax = np.nanmax(gt)
+plt.subplot(1,3,1)
+plt.imshow(gt,aspect='auto',cmap=colormap,vmin=vmin,vmax=vmax)
+plt.colorbar()
+plt.title('GT')
+plt.subplot(1,3,2)
+plt.imshow(obs,aspect='auto',cmap=colormap,vmin=vmin,vmax=vmax)
+plt.colorbar() 
+plt.title('Obs')
+plt.subplot(1,3,3)
+plt.imshow(itrp,aspect='auto',cmap=colormap,vmin=vmin,vmax=vmax)
+plt.colorbar()  
+plt.title('OI')
+plt.draw()
+```
 ![](../master/Image/dis.png)
 
 Define test zone (top-left point and size of zone): 
