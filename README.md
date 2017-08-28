@@ -89,7 +89,21 @@ The toolbox includes 3 main modules:
       AF_sst.R = 0.1  # variance of observation error
       ```
    * Class **AnDA_result**: store AnDA’s results, such as GT, Observation, Optimal Interpolation, AnDA Interpolations and statistical errors (rmse, correlation)
-      * sdsds
       ```bash
+      # All results will be computed and stored in this class.
+      class AnDA_result:
+           itrp_AnDA = [] # AnDA interpolation
+           itrp_OI = []   # OI product, for comparison
+           itrp_postAnDA = []  # Post_processing AnDA interpolation (removing block artifacts)
+           GT = []   # groundtruth
+           Obs = []  # Observation
+           LR = []   # Low resolution product
+           # stats: rmse & correlation of interpolation to the groundtruth
+           rmse_AnDA = [] 
+           corr_AnDA = []
+           rmse_OI = []
+           corr_OI = []
+           rmse_postAnDA = []
+           corr_postAnDA = []
       ```
       
