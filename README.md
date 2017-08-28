@@ -127,6 +127,8 @@ Load data into class **VAR**:
 VAR_ = VAR()
 VAR_ = Load_data(PR_sst) 
 ```
+Visualize an example of reference Groundtruth, Observation and Optimal Interpolation product
+
 Define test zone (top-left point and size of zone): 
 ```bash
 r_start = 0 
