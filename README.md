@@ -5,7 +5,4 @@ MS-AnDA is a Python library for Multi-scale Analog Data Assimilation, applicatio
 This Python library is an additional material of the publication "Data-driven Models for the Spatio-Temporal Interpolation of satellite-derived SST Fields", from **R. Fablet, P. Huynh Viet, R. Lguensat**, accepted to *IEEE Transactions on Computational Imaging*
 
 # How to use
-The toolbox includes 3 main modules:
-1. Module **Parameters** (AnDA_variables.py): 
-- Class **PR**: to specify general parameters
-* Use multi-scale or single-scale (global-scale) assimilation ?
+Please read the attached readme.pdf
