@@ -15,24 +15,24 @@ The toolbox includes 3 main modules:
       * Directories of datasets: sst (sla), observation, OI product (ostia)...
       ```bash
       # Example of setting parameter for SST
-       PR_sst = PR() 
-       PR_sst.flag_scale = True  # True: multi scale AnDA, False: global scale AnDA                 
-       PR_sst.n = 50 # dimension state vector
-       PR_sst.patch_r = 20 # r_size of patch 
-       PR_sst.patch_c = 20 # c_size of patch
-       PR_sst.training_days = 2558 # num of training images: 2008-2014 
-       PR_sst.test_days = 364 # num of test images: 2015
-       PR_sst.lag = 1 # lag of time series: t -> t+lag
-       PR_sst.G_PCA = 20 # N_eof for global PCA
+       PR_ = PR() 
+       PR_.flag_scale = True  # True: multi scale AnDA, False: global scale AnDA                 
+       PR_.n = 50 # dimension state vector
+       PR_.patch_r = 20 # r_size of patch 
+       PR_.patch_c = 20 # c_size of patch
+       PR_.training_days = 2558 # num of training images: 2008-2014 
+       PR_.test_days = 364 # num of test images: 2015
+       PR_.lag = 1 # lag of time series: t -> t+lag
+       PR_.G_PCA = 20 # N_eof for global PCA
        # Input dataset
-       PR_sst.path_X = './data/AMSRE/sst.npz' # directory of sst data
-       PR_sst.path_OI = './data/AMSRE/OI.npz' # directory of OI product (ostia sst, in this case)
-       PR_sst.path_mask = './AMSRE/metop_mask.npz' # directory of observation mask
+       PR_.path_X = './data/AMSRE/sst.npz' # directory of sst data
+       PR_.path_OI = './data/AMSRE/OI.npz' # directory of OI product (ostia sst, in this case)
+       PR_.path_mask = './AMSRE/metop_mask.npz' # directory of observation mask
        # Dataset automatically created during execution
-       PR_sst.path_X_lr = './data/AMSRE/sst_lr_30.npz' # directory of LR product
-       PR_sst.path_dX_PCA = './data/AMSRE/dX_pca.npz' # directory of PCA transformation of detail fields
-       PR_sst.path_index_patches = './data/AMSRE/list_pos.pickle' # directory to store all position of each patch over image
-       PR_sst.path_neighbor_patches = './data/AMSRE/pair_pos.pickle' # directory to store position of each path's neighbors 
+       PR_.path_X_lr = './data/AMSRE/sst_lr_30.npz' # directory of LR product
+       PR_.path_dX_PCA = './data/AMSRE/dX_pca.npz' # directory of PCA transformation of detail fields
+       PR_.path_index_patches = './data/AMSRE/list_pos.pickle' # directory to store all position of each patch over image
+       PR_.path_neighbor_patches = './data/AMSRE/pair_pos.pickle' # directory to store position of each path's neighbors 
       ```
    * Class **VAR**: to store all necessary datasets
       * Training and testing catalog for detail fields in both original and EOF space
@@ -167,20 +167,20 @@ level = 22 # 22 patches executed simultaneously
 Run Assimilation:
 ```bash
 saved_path =  'path_to_save.pickle'
-AnDA_sst_1 = AnDA_result()
-MS_AnDA_sst = MS_AnDA(VAR_sst, PR_sst, AF_sst)
-AnDA_sst_1 = MS_AnDA_sst.multi_patches_assimilation(level, r_start, r_length, c_start, c_length)
+MS_AnDA_itrp = AnDA_result()
+MS_AnDA_ = MS_AnDA(VAR_sst, PR_sst, AF_sst)
+MS_AnDA_itrp = MS_AnDA_sst.multi_patches_assimilation(level, r_start, r_length, c_start, c_length)
 ```
 Save result:
 ```bash
 with open(saved_path, 'wb') as handle:
-    pickle.dump(AnDA_sst_1, handle)
+    pickle.dump(MS_AnDA_itrp, handle)
 ```
 Reload result:
 Save result:
 ```bash
 with open(saved_path, 'rb') as handle:
-    AnDA_sst_1 = pickle.load(handle) 
+    MS_AnDA_itrp = pickle.load(handle) 
 ```
 To compare with AnDA interpolation:
    * Run G-AnDA: applying AnDA on region scale. We need to reset parameters in **PR** and **General_AF**:
@@ -212,7 +212,7 @@ To compare with AnDA interpolation:
      ``` 
    * Run [VE-DINEOF](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0155928) algorithms to compare with AnDA interpolation.
      ```bash
-     itrp_dineof = VE_Dineof(PR_sla, VAR_sla.dX_orig+VAR_sla.X_lr, VAR_sla.Optimal_itrp+VAR_sla.X_lr[PR_sla.training_days:], VAR_sla.Obs_test, 100, 50)
+     itrp_dineof = VE_Dineof(PR_, VAR_.dX_orig+VAR_.X_lr, VAR_.Optimal_itrp+VAR_.X_lr[PR_.training_days:], VAR_.Obs_test, 100, 50)
      ```
 Compare Fourier power spectrum (**note** that the input of *raPsd2dv1* should be without land pixel (avoid NaN values). 
 ```bash
