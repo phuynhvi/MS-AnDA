@@ -88,3 +88,8 @@ The toolbox includes 3 main modules:
       AF_sst.B = 0.05 # variance of initial state error
       AF_sst.R = 0.1  # variance of observation error
       ```
+   * Class **AnDA_result**: store AnDA’s results, such as GT, Observation, Optimal Interpolation, AnDA Interpolations and statistical errors (rmse, correlation)
+      * sdsds
+      ```bash
+      ```
+      
