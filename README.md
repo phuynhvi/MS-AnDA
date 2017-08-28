@@ -106,4 +106,16 @@ The toolbox includes 3 main modules:
            rmse_postAnDA = []
            corr_postAnDA = []
       ```
-      
+2. Module **Transform functions** (*AnDa_transform_functions.py*): 
+    * Perform Global PCA (to find LR), patch-based PCA for multi-scale assimilation
+    * Post-processing to remove block artifact due to overlapping patches
+    * Perform VE-DINEOF
+    * Find gradient, Fourier power spectrum
+    * Loading and preprocessing data according to the parameters described in **PR**
+3. Module **Multi-scale Assimilation** (*Multiscale_Assimilation.py*): based on informations from PR, VAR, AF, defining a specific kind of assimilation
+    * Class **Single_patch_assimilation**:
+       * Processing on one single patch.
+       * Input: position of patch (rows, columns) over initial image.
+    * Class **Multi_patch_assimilation**:
+       * Processing on a zone of image (defined by its size and coordinates of top-left point), by dividing into multiples patches, then plugging them into **Single_patch_assimilation**
+       * Input: number of parallel jobs, or number of patches are executed simultaneously.
