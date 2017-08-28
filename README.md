@@ -13,25 +13,25 @@ The toolbox includes 3 main modules:
       * Size of patch (eg. 20 × 20)
       * Size of training dataset, testing dataset (number of images)
       * Directories of datasets: sst (sla), observation, OI product (ostia)...
- ```bash
- # Example of setting parameter for SST
-  PR_sst = PR() 
-  PR_sst.flag_scale = True  # True: multi scale AnDA, False: global scale AnDA                 
-  PR_sst.n = 50 # dimension state vector
-  PR_sst.patch_r = 20 # r_size of patch 
-  PR_sst.patch_c = 20 # c_size of patch
-  PR_sst.training_days = 2558 # num of training images: 2008-2014 
-  PR_sst.test_days = 364 # num of test images: 2015
-  PR_sst.lag = 1 # lag of time series: t -> t+lag
-  PR_sst.G_PCA = 20 # N_eof for global PCA
-  # Input dataset
-  PR_sst.path_X = './data/AMSRE/sst.npz' # directory of sst data
-  PR_sst.path_OI = './data/AMSRE/OI.npz' # directory of OI product (ostia sst, in this case)
-  PR_sst.path_mask = './AMSRE/metop_mask.npz' # directory of observation mask
-  # Dataset automatically created during execution
-  PR_sst.path_X_lr = './data/AMSRE/sst_lr_30.npz' # directory of LR product
-  PR_sst.path_dX_PCA = './data/AMSRE/dX_pca.npz' # directory of PCA transformation of detail fields
-  PR_sst.path_index_patches = './data/AMSRE/list_pos.pickle' # directory to store all position of each patch over image
-  PR_sst.path_neighbor_patches = './data/AMSRE/pair_pos.pickle' # directory to store position of each path's neighbors 
- ```
-      
+      ```bash
+      # Example of setting parameter for SST
+       PR_sst = PR() 
+       PR_sst.flag_scale = True  # True: multi scale AnDA, False: global scale AnDA                 
+       PR_sst.n = 50 # dimension state vector
+       PR_sst.patch_r = 20 # r_size of patch 
+       PR_sst.patch_c = 20 # c_size of patch
+       PR_sst.training_days = 2558 # num of training images: 2008-2014 
+       PR_sst.test_days = 364 # num of test images: 2015
+       PR_sst.lag = 1 # lag of time series: t -> t+lag
+       PR_sst.G_PCA = 20 # N_eof for global PCA
+       # Input dataset
+       PR_sst.path_X = './data/AMSRE/sst.npz' # directory of sst data
+       PR_sst.path_OI = './data/AMSRE/OI.npz' # directory of OI product (ostia sst, in this case)
+       PR_sst.path_mask = './AMSRE/metop_mask.npz' # directory of observation mask
+       # Dataset automatically created during execution
+       PR_sst.path_X_lr = './data/AMSRE/sst_lr_30.npz' # directory of LR product
+       PR_sst.path_dX_PCA = './data/AMSRE/dX_pca.npz' # directory of PCA transformation of detail fields
+       PR_sst.path_index_patches = './data/AMSRE/list_pos.pickle' # directory to store all position of each patch over image
+       PR_sst.path_neighbor_patches = './data/AMSRE/pair_pos.pickle' # directory to store position of each path's neighbors 
+      ```
+  * Class **VAR**: to store all necessary datasets
