@@ -128,7 +128,7 @@ VAR_ = VAR()
 VAR_ = Load_data(PR_sst) 
 ```
 Visualize an example of reference Groundtruth, Observation and Optimal Interpolation product
-![](../master/Image/psd.PNG)
+![](../master/Image/dis.png)
 
 Define test zone (top-left point and size of zone): 
 ```bash
