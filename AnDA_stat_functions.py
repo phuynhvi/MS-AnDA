@@ -130,7 +130,10 @@ def inv_using_Woodbury(ainv,u,cinv,v,rinv):
     """ inv using Woodbury equation """
     
     tmp = inv_using_SVD(cinv+np.dot(v,u)*rinv,0.9999)
-    return ainv-rinv*rinv*np.dot(np.dot(u,tmp),v)
+    tmp_inv = -rinv*rinv*np.dot(np.dot(u,tmp),v)
+    np.fill_diagonal(tmp_inv,tmp_inv.diagonal()+ainv)
+    #return ainv-rinv*rinv*np.dot(np.dot(u,tmp),v)
+    return tmp_inv
     
 def hanning2d(M, N):
     """
