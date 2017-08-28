@@ -182,7 +182,7 @@ Save result:
 with open(saved_path, 'rb') as handle:
     AnDA_sst_1 = pickle.load(handle) 
 ```
-Run VE-DINEOF algorithms to compare with AnDA interpolation.
+Run [VE-DINEOF](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0155928) algorithms to compare with AnDA interpolation.
 ```bash
 sla_dineof = VE_Dineof(PR_sla, VAR_sla.dX_orig+VAR_sla.X_lr, VAR_sla.Optimal_itrp+VAR_sla.X_lr[PR_sla.training_days:], VAR_sla.Obs_test, 100, 50)
 ```
