@@ -58,7 +58,7 @@ The toolbox includes 3 main modules:
            index_patch = [] # store order of every image patch: 0, 1,..total_patchs
            neighbor_patchs = [] # store order of neighbors of every image patch
       ```
-   * Class **AF**: to specify parameters for Analog Forecasting
+   * Class **General_AF**: to specify parameters for Analog Forecasting
       * Use condition for analog forecasting ?. If using condition, specify where is the condition
       * Use clusterized version ?. If using, specify number of *k* clusters
       * Use global or local analog by specifying form of neighborhood
@@ -121,3 +121,39 @@ The toolbox includes 3 main modules:
        * Input: number of parallel jobs, or number of patches are executed simultaneously.
        
 # Test
+Specify all necessary parameters described in class **PR**, and **General_AF**
+Load data into class **VAR**:
+```bash
+VAR_ = VAR()
+VAR_ = Load_data(PR_sst) 
+```
+Define test zone (top-left point and size of zone): 
+```bash
+r_start = 0 
+c_start = 0 
+r_length = 150 
+c_length = 300 
+```
+Define multiprocessing level:
+```bash
+level = 22 # 22 patches executed simultaneously
+```
+Run Assimilation:
+```bash
+saved_path =  './data/AMSRE/AnDA/AnDA_local_cond.pickle'
+AnDA_sst_1 = AnDA_result()
+MS_AnDA_sst = MS_AnDA(VAR_sst, PR_sst, AF_sst)
+AnDA_sst_1 = MS_AnDA_sst.multi_patches_assimilation(level, r_start, r_length, c_start, c_length)
+```
+Save result:
+```bash
+with open(saved_path, 'wb') as handle:
+    pickle.dump(AnDA_sst_1, handle)
+```
+Reload result:
+Save result:
+```bash
+with open(saved_path, 'rb') as handle:
+    AnDA_sst_1 = pickle.load(handle) 
+```
+
