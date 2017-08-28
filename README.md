@@ -186,3 +186,28 @@ Run [VE-DINEOF](http://journals.plos.org/plosone/article?id=10.1371/journal.pone
 ```bash
 sla_dineof = VE_Dineof(PR_sla, VAR_sla.dX_orig+VAR_sla.X_lr, VAR_sla.Optimal_itrp+VAR_sla.X_lr[PR_sla.training_days:], VAR_sla.Obs_test, 100, 50)
 ```
+Compare Fourier power spectrum
+```bash
+day =11# 82
+resSLA = 0.25
+f0, Pf_AnDA  = raPsd2dv1(G_AnDA.itrp_AnDA[day,38:173,62:]*100,resSLA,True)
+f1, Pf_postAnDA  = raPsd2dv1(AnDA_sla_1.itrp_postAnDA[day,38:173,62:]*100,resSLA,True)
+f2, Pf_GT    = raPsd2dv1(AnDA_sla_1.GT[day,38:173,62:]*100,resSLA,True)
+f3, Pf_OI    = raPsd2dv1(AnDA_sla_1.itrp_OI[day,38:173,62:]*100,resSLA,True)
+f4, Pf_Dineof    = raPsd2dv1(sla_dineof[day,38:173,62:]*100,resSLA,True)
+
+wf1         = 1/f1
+wf2         = 1/f2
+wf3         = 1/f3
+plt.figure()
+plt.loglog(wf2,Pf_GT,label='GT')
+plt.loglog(wf3,Pf_OI,label='OI')
+plt.loglog(wf3,Pf_Dineof,label='VE_DINEOF')
+plt.loglog(wf1,Pf_AnDA,label='G-AnDA')
+plt.loglog(wf2,Pf_postAnDA,label='MS-AnDA')
+plt.gca().invert_xaxis()
+plt.legend()
+plt.ylim((10E-8,10))
+plt.xlabel('Wavelength (km)')
+plt.ylabel('Fourier power spectrum')
+```
