@@ -34,4 +34,26 @@ The toolbox includes 3 main modules:
        PR_sst.path_index_patches = './data/AMSRE/list_pos.pickle' # directory to store all position of each patch over image
        PR_sst.path_neighbor_patches = './data/AMSRE/pair_pos.pickle' # directory to store position of each path's neighbors 
       ```
-  * Class **VAR**: to store all necessary datasets
+   * Class **VAR**: to store all necessary datasets
+      * Training and testing catalog for detail fields in both original and EOF space
+      * Observation
+      * LR product
+      * Condition dataset used in AF (if exists)
+      * Indexing set that points out the position of a patch over original image
+      ```bash
+      class VAR:
+           X_lr = []
+           dX_orig = []
+           Optimal_itrp = []    
+           dX_train = [] # training catalogs  for dX in EOF space
+           dX_eof_coeff = [] # EOF base vector
+           dX_eof_mu = [] # EOF mean vector    
+           dX_GT_test = [] # dX GT in test year
+           Obs_test = [] # Observation in test year, by applying mask to dX GT    
+           dX_cond = [] # condition used for AF
+           gr_vl_train = [] # gradient, velocity used as physical condition
+           gr_vl_test = {}  
+           gr_vl_coeff = {}        
+           index_patch = [] # store order of every image patch: 0, 1,..total_patchs
+           neighbor_patchs = [] # store order of neighbors of every image patch
+      ```
