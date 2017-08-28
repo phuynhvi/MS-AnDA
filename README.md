@@ -41,6 +41,7 @@ The toolbox includes 3 main modules:
       * Condition dataset used in AF (if exists)
       * Indexing set that points out the position of a patch over original image
       ```bash
+      # Program will automatically load all data into this variable according the parameters described in class **PR**
       class VAR:
            X_lr = []
            dX_orig = []
@@ -56,4 +57,34 @@ The toolbox includes 3 main modules:
            gr_vl_coeff = {}        
            index_patch = [] # store order of every image patch: 0, 1,..total_patchs
            neighbor_patchs = [] # store order of neighbors of every image patch
+      ```
+   * Class **AF**: to specify parameters for Analog Forecasting
+      * Use condition for analog forecasting ?. If using condition, specify where is the condition
+      * Use clusterized version ?. If using, specify number of *k* clusters
+      * Use global or local analog by specifying form of neighborhood
+      * Select three forecasting strategies: locally constant, increment, local linear
+      * Variance of initial error, observation error
+      * Pre-trained nearest neighbor searchers ( FLANN )
+      ```bash
+      # Example of Analog Forecasting for SST
+      AF_sst = General_AF()
+      AF_sst.flag_reduced  = True # True: Clusterized version of Local Linear AF
+      AF_sst.flag_cond = False # True: use Obs at t+lag as condition to select successors
+                        # False: no condition in analog forecasting
+      AF_sst.flag_model = False # True: Use gradient, velocity as additional regressors in AF
+      AF_sst.flag_catalog = True # True: Use each catalog for each patch position
+                          # False: Use only one big catalog for all positions 
+      AF_sst.cluster = 1     # number of cluster for clusterized ver.
+      AF_sst.k = 200  # number of analogs
+      AF_sst.k_initial = 200 # retrieving k_initial nearest neighbors, then using condition to retrieve k analogs, k_initial must >= k
+      AF_sst.neighborhood = np.ones([PR_sst.n,PR_sst.n]) # global analogs
+      AF_sst.neighborhood = np.eye(PR_sst.n)+np.diag(np.ones(PR_sst.n-1),1)+ np.diag(np.ones(PR_sst.n-1),-1)+ \
+                             np.diag(np.ones(PR_sst.n-2),2)+np.diag(np.ones(PR_sst.n-2),-2)
+      AF_sst.neighborhood[0:2,:5] = 1
+      AF_sst.neighborhood[PR_sst.n-2:,PR_sst.n-5:] = 1 # local analogs
+      AF_sst.neighborhood[PR_sst.n-2:,PR_sst.n-5:] = 1 # local analogs
+      AF_sst.regression = 'local_linear' # forecasting strategies. select among: locally_constant, increment, local_linear 
+      AF_sst.sampling = 'gaussian' 
+      AF_sst.B = 0.05 # variance of initial state error
+      AF_sst.R = 0.1  # variance of observation error
       ```
